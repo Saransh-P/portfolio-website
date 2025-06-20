@@ -89,7 +89,7 @@ export default function Portfolio() {
         "A modern, responsive personal portfolio built using Next.js and TailwindCSS. Showcases my skills, projects, and contact details, with support for dark mode and a clean, minimal UI.",
       image: "/projects/self-portfolio.jpg",
       liveDemo: "https://saranshpathak.com",
-      github: "https://github.com/Saransh-P/my-portfolio.git",
+      github: "https://github.com/Saransh-P/portfolio-website.git",
       technologies: ["Next.js", "TailwindCSS", "React", "TypeScript"]
     },
 
