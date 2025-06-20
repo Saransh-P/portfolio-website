@@ -29,32 +29,38 @@ export default function Portfolio() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
+    if (typeof window !== "undefined") {
+      if (darkMode) {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
     }
   }, [darkMode])
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
+        setScrollY(window.scrollY)
 
-      // Determine current section based on scroll position
-      const sections = ["home", "about", "projects", "contact"]
-      const sectionHeight = window.innerHeight
-      const currentSectionIndex = Math.floor(window.scrollY / sectionHeight)
-      setCurrentSection(Math.min(currentSectionIndex, sections.length - 1))
+        // Determine current section based on scroll position
+        const sections = ["home", "about", "projects", "contact"]
+        const sectionHeight = window.innerHeight
+        const currentSectionIndex = Math.floor(window.scrollY / sectionHeight)
+        setCurrentSection(Math.min(currentSectionIndex, sections.length - 1))
+      }
+
+      window.addEventListener("scroll", handleScroll)
+      return () => window.removeEventListener("scroll", handleScroll)
     }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+    if (typeof window !== "undefined") {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
     }
   }
 
@@ -126,20 +132,23 @@ export default function Portfolio() {
       if (window.innerWidth >= 768) return 2
       return 1
     }
-    return 3
+    return 3 // Default for server-side rendering
   }
 
-  const [projectsPerPage, setProjectsPerPage] = useState(3)
+  const [projectsPerPage, setProjectsPerPage] = useState(3) // Default to 3 initially
 
   //resize the projects per page
   useEffect(() => {
-    const handleResize = () => {
-      setProjectsPerPage(getProjectsPerPage())
-    }
+    if (typeof window !== "undefined") {
+      setProjectsPerPage(getProjectsPerPage()) // Set initial value
+      
+      const handleWindowResize = () => {
+        setProjectsPerPage(getProjectsPerPage())
+      }
 
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+      window.addEventListener("resize", handleWindowResize)
+      return () => window.removeEventListener("resize", handleWindowResize)
+    }
   }, [])
 
   const totalProjectSets = Math.ceil(projects.length / projectsPerPage) //total project sets
@@ -236,7 +245,11 @@ export default function Portfolio() {
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 z-50">
         <div
           className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-300 ease-out"
-          style={{ width: `${(scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100}%` }}
+          style={{ 
+            width: typeof window !== 'undefined' 
+              ? `${(scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100}%` 
+              : '0%' 
+          }}
         />
       </div>
 
