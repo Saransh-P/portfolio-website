@@ -88,8 +88,8 @@ export default function Portfolio() {
       description:
         "A modern, responsive personal portfolio built using Next.js and TailwindCSS. Showcases my skills, projects, and contact details, with support for dark mode and a clean, minimal UI.",
       image: "/projects/self-portfolio.jpg",
-      liveDemo: "https://saranshpathak.com",
-      github: "https://github.com/Saransh-P/portfolio-website.git",
+      liveDemo: "#home",
+      github: "https://github.com/Saransh-P/saranshpathak-portfolio.git",
       technologies: ["Next.js", "TailwindCSS", "React", "TypeScript"]
     },
 
@@ -603,7 +603,7 @@ export default function Portfolio() {
                         <Button
                           size="sm"
                           className="interactive-btn-primary flex items-center gap-2"
-                          onClick={() => window.open(project.liveDemo, '_blank')}
+                          onClick={() => project.liveDemo.startsWith('#') ? scrollToSection(project.liveDemo.slice(1)) : window.open(project.liveDemo, '_blank')}
                         >
                           <ExternalLink className="h-4 w-4" />
                           Live Demo
@@ -665,14 +665,46 @@ export default function Portfolio() {
             </p>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-              <div className="contact-card">
+              <button 
+                className="contact-card group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300"
+                onClick={() => {
+                  navigator.clipboard.writeText("+91 93070 37321");
+                  const el = document.getElementById("phone-tooltip");
+                  if (el) {
+                    el.classList.remove("opacity-0");
+                    setTimeout(() => el.classList.add("opacity-0"), 2000);
+                  }
+                }}
+              >
                 <Phone className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 <span className="text-lg">+91 93070 37321</span>
-              </div>
-              <div className="contact-card">
+                <span 
+                  id="phone-tooltip"
+                  className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 transition-opacity duration-300"
+                >
+                  Copied!
+                </span>
+              </button>
+              <button 
+                className="contact-card group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-300"
+                onClick={() => {
+                  navigator.clipboard.writeText("saranshp510@gmail.com");
+                  const el = document.getElementById("email-tooltip");
+                  if (el) {
+                    el.classList.remove("opacity-0");
+                    setTimeout(() => el.classList.add("opacity-0"), 2000);
+                  }
+                }}
+              >
                 <Mail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 <span className="text-lg">saranshp510@gmail.com</span>
-              </div>
+                <span 
+                  id="email-tooltip"
+                  className="absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 transition-opacity duration-300"
+                >
+                  Copied!
+                </span>
+              </button>
             </div>
           </div>
         </section>
