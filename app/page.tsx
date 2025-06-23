@@ -19,8 +19,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+  //particles
+  type Particle = {
+    left: string;
+    top: string;
+    moveX: string;
+    moveY: string;
+  };
+
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(false)
+  const [particles, setParticles] = useState<Particle[]>([]);
   const [currentProjectSet, setCurrentProjectSet] = useState(0)
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0)
   const [scrollY, setScrollY] = useState(0)
@@ -54,6 +63,17 @@ export default function Portfolio() {
       return () => window.removeEventListener("scroll", handleScroll)
     }
   }, [])
+
+  useEffect(() => {
+    const generated = [...Array(20)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      moveX: `${(Math.random() - 0.5) * 200}px`,
+      moveY: `${(Math.random() - 0.5) * 200}px`,
+    }));
+    setParticles(generated);
+  }, []);
+  
 
   const scrollToSection = (sectionId: string) => {
     if (typeof window !== "undefined") {
@@ -217,19 +237,22 @@ export default function Portfolio() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="animated-bg">
           <div className="particles">
-            {[...Array(20)].map((_, i) => (
+            {particles.map((p, i) => (
               <div
                 key={i}
                 className="particle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  '--move-x': `${(Math.random() - 0.5) * 200}px`,
-                  '--move-y': `${(Math.random() - 0.5) * 200}px`,
-                } as React.CSSProperties}
+                style={
+                  {
+                    left: p.left,
+                    top: p.top,
+                    '--move-x': p.moveX,
+                    '--move-y': p.moveY,
+                  } as React.CSSProperties
+                }
               />
             ))}
           </div>
+
           <div className="waves">
             <div className="wave" />
             <div className="wave" />
@@ -405,7 +428,7 @@ export default function Portfolio() {
             <Tabs defaultValue="skills" className="w-full">
               <TabsList className="glass-tabs mx-auto">
                 <TabsTrigger value="skills" className="tab-trigger">
-                  Skills
+                  Technical
                 </TabsTrigger>
                 <TabsTrigger value="hobby" className="tab-trigger">
                   Hobby
@@ -413,42 +436,10 @@ export default function Portfolio() {
               </TabsList>
 
               <TabsContent value="skills" className="animate-fade-in about-tab-content">
+              <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400"> My Skills </h1>
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
-                  <div className="space-y-4">
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    I'm a passionate full-stack web developer with a focus on building responsive, real-time web applications using the MERN stack (MongoDB, Express.js, React, Node.js). I love turning ideas into functional, user-friendly interfaces and scalable backends.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Even as a fresher, I've built hands-on projects like a real-time chat application and modern, responsive websites — with features like authentication, dark mode, and mobile-first design.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    I'm currently open to full-time roles, freelance opportunities, and collaborations where I can bring value through clean code and creative problem-solving.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed ">
-                    I love discovering UI/UX patterns, playing with animations, and refining how I work. Let's build something great together!  
-                    </p>
-                    <div className="flex flex-wrap gap-4 mt-6">
-                      <Button
-                        size="lg"
-                        className="interactive-btn-primary flex items-center gap-2"
-                        onClick={() => window.open('/resume.pdf', '_blank')}
-                      >
-                        <Download className="h-5 w-5" />
-                        Download Resume
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="interactive-btn flex items-center gap-2"
-                        onClick={() => scrollToSection('projects')}
-                      >
-                        <ExternalLink className="h-5 w-5" />
-                        View Projects
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
+                  {/* Skills section - Right side */}
+                  <div className="space-y-6 order-1 lg:order-2">
                     <div className="skill-category">
                       <h3 className="text-xl font-semibold mb-3 text-blue-600 dark:text-blue-400">Frontend</h3>
                       <div className="flex flex-wrap gap-2">
@@ -497,33 +488,51 @@ export default function Portfolio() {
                       </div>
                     </div>
                   </div>
+
+                  {/* About section - Left side */}
+                  <div className="space-y-4 order-2 lg:order-1">
+                    
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    I'm a passionate full-stack web developer with a focus on building responsive, real-time web applications using the MERN stack (MongoDB, Express.js, React, Node.js). I love turning ideas into functional, user-friendly interfaces and scalable backends.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Even as a fresher, I've built hands-on projects like a real-time chat application and modern, responsive websites — with features like authentication, dark mode, and mobile-first design.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    I'm currently open to full-time roles, freelance opportunities, and collaborations where I can bring value through clean code and creative problem-solving.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed ">
+                    I love discovering UI/UX patterns, playing with animations, and refining how I work. Let's build something great together!  
+                    </p>
+                    
+                    <div className="flex gap-4">
+                      <Button
+                        size="lg"
+                        className="interactive-btn-primary flex items-center gap-2"
+                        onClick={() => window.open('/resume.pdf', '_blank')}
+                      >
+                        <Download className="h-5 w-5" />
+                        Download Resume
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="interactive-btn flex items-center gap-2"
+                        onClick={() => scrollToSection('projects')}
+                      >
+                        <ExternalLink className="h-5 w-5" />
+                        View Projects
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
 
               <TabsContent value="hobby" className="animate-fade-in about-tab-content">
+              <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400"> Photography </h1>
                 <div className="grid lg:grid-cols-2 gap-12 items-start">
-                  <div className="space-y-6">
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    I'm a passionate hobbyist photographer who finds joy in capturing everyday moments through a creative lens. Photography, for me, is more than just a hobby—it's a way to observe the world more closely, appreciate the details, and tell stories without words.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    I enjoy exploring streets, light, and mood to frame shots that evoke emotion and atmosphere. Whether it's a fleeting expression, a quiet corner, or the rhythm of urban life, I love the challenge of preserving those moments in a meaningful way.
-                    </p>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Though self-taught, I'm always learning—experimenting with composition, lighting, and post-processing to refine my style and grow as a visual storyteller. Photography keeps me grounded, inspired, and constantly curious.
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      className="interactive-btn-insta flex items-center gap-2"
-                      onClick={() => window.open('https://www.instagram.com/subtlestray?igsh=Y2dpN3ZubnU2Nmxr', '_blank')}
-                    >
-                      <InstagramIcon className="h-4 w-4" />
-                      @subtlestray
-                    </Button>
-                  </div>
-
-                  <div className="relative">
+                  {/* Photo carousel - Right side */}
+                  <div className="order-1 lg:order-2">
                     <div className="photo-carousel">
                       <div className="carousel-image-container">
                         {photographyImages.map((image, index) => (
@@ -565,6 +574,29 @@ export default function Portfolio() {
                       </div>
                     </div>
                   </div>
+
+                  {/* About hobby - Left side */}
+                  <div className="space-y-4 order-2 lg:order-1">
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    I'm a passionate hobbyist photographer who finds joy in capturing everyday moments through a creative lens. Photography, for me, is more than just a hobby—it's a way to observe the world more closely, appreciate the details, and tell stories without words.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    I enjoy exploring streets, light, and mood to frame shots that evoke emotion and atmosphere. Whether it's a fleeting expression, a quiet corner, or the rhythm of urban life, I love the challenge of preserving those moments in a meaningful way.
+                    </p>
+                    <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Though self-taught, I'm always learning—experimenting with composition, lighting, and post-processing to refine my style and grow as a visual storyteller. Photography keeps me grounded, inspired, and constantly curious.
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="interactive-btn-insta flex items-center gap-2"
+                      onClick={() => window.open('https://www.instagram.com/subtlestray?igsh=Y2dpN3ZubnU2Nmxr', '_blank')}
+                    >
+                      <InstagramIcon className="h-4 w-4" />
+                      @subtlestray
+                    </Button>
+                  </div>
+
                 </div>
               </TabsContent>
             </Tabs>
